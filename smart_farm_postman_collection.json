@@ -1,0 +1,321 @@
+{
+    "info": {
+        "_postman_id": "smart-farm-iot-collection-v2",
+        "name": "Smart Farm IoT API - Agent Powered",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth & Admin",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/auth/login",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Register Agent",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Predictive-Analytics-Bot\",\n  \"permissions\": [\"read_telemetry\", \"send_commands\"]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/auth/register-agent",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "auth",
+                                "register-agent"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Devices (Registration)",
+            "item": [
+                {
+                    "name": "Register Device",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"device_id\": \"farm-node-01\",\n  \"location\": \"Blantyre Farm\",\n  \"latitude\": -15.7861,\n  \"longitude\": 35.0058\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/devices/register",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "devices",
+                                "register"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "IoT Data (ESP32 Simulation)",
+            "item": [
+                {
+                    "name": "Send Sensor Data",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "x-api-key",
+                                "value": "YOUR_DEVICE_API_KEY",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"device_id\": \"farm-node-01\",\n  \"temperature\": 27.5,\n  \"humidity\": 68,\n  \"soil_moisture\": 35\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/iot/data",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "iot",
+                                "data"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Agent API (Third-Party Access)",
+            "item": [
+                {
+                    "name": "Get All Devices",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "x-agent-key",
+                                "value": "YOUR_AGENT_API_KEY",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/agent/devices",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "agent",
+                                "devices"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Device Detail & Latest Telemetry",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "x-agent-key",
+                                "value": "YOUR_AGENT_API_KEY",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/agent/devices/farm-node-01",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "agent",
+                                "devices",
+                                "farm-node-01"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Historical Data (Paginated)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "x-agent-key",
+                                "value": "YOUR_AGENT_API_KEY",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/agent/devices/farm-node-01/data?page=1&limit=50",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "agent",
+                                "devices",
+                                "farm-node-01",
+                                "data"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "50"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Request AI Insights (Summaries)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "x-agent-key",
+                                "value": "YOUR_AGENT_API_KEY",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"device_id\": \"farm-node-01\",\n  \"query_type\": \"averages\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/agent/query",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "agent",
+                                "query"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Post Command to Device",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "x-agent-key",
+                                "value": "YOUR_AGENT_API_KEY",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"device_id\": \"farm-node-01\",\n  \"command\": \"PUMP_STATUS_CHANGE\",\n  \"payload\": {\n    \"action\": \"ON\",\n    \"duration_minutes\": 15\n  }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/agent/commands",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "agent",
+                                "commands"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
