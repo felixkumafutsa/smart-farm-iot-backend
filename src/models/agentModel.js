@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 /**
  * Agent Schema
@@ -15,7 +15,7 @@ const agentSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        default: () => `agent_${uuidv4().replace(/-/g, '')}`
+        default: () => `agent_${crypto.randomUUID().replace(/-/g, '')}`
     },
     permissions: {
         type: [String],

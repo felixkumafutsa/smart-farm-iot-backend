@@ -1,5 +1,5 @@
 const Device = require('../models/deviceModel');
-const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 /**
  * Register a new device with its information.
@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
  */
 const registerDevice = async (deviceData) => {
     const { device_id, location, latitude, longitude } = deviceData;
-    const apiKey = `key_${uuidv4().replace(/-/g, '')}`;
+    const apiKey = `key_${crypto.randomUUID().replace(/-/g, '')}`;
 
     return await Device.findOneAndUpdate(
         { device_id },
