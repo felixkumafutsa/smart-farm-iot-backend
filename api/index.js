@@ -7,5 +7,5 @@ module.exports = async (req, res) => {
     await connectDB();
 
     // Hand off the request to the Express app
-    return app(req, res);
+    app(req, res);
 };
