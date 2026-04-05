@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const { errorHandler, AppError } = require('./middleware/error');
 const { apiLimiter } = require('./middleware/rateLimit');
+const { injectSpeedInsights } = require('@vercel/speed-insights');
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
@@ -12,6 +13,11 @@ const iotRoutes = require('./routes/iotRoutes');
 const agentRoutes = require('./routes/agentRoutes');
 
 const app = express();
+
+/**
+ * Initialize Vercel Speed Insights.
+ */
+injectSpeedInsights();
 
 /**
  * Middleware setup.
