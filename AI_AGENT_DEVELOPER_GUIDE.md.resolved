@@ -1,0 +1,68 @@
+# 📄 AI Agent Developer Handbook: Smart Farm Integration
+
+This document provides the blueprint for connecting **Google Gemini (AI Studio)** or any other reasoning agent to the Smart Farm IoT Platform.
+
+---
+
+## 🏗️ Architecture Setup
+*   **Infrastructure**: Vercel Serverless
+*   **Data Store**: MongoDB Atlas (Sensor Telemetry)
+*   **Hardware Source**: ESP32 Nodes (Temp, Humidity, Soil, Light Intensity)
+*   **API Protocol**: REST / JSON
+
+---
+
+## 🛠️ Step 1: Connecting the Tools (OpenAPI)
+The agent uses a standard **OpenAPI (Swagger)** specification to "understand" which tools it can call.
+
+1.  **Download the YAML Spec**: [agent_api_spec.yaml](file:///c:/Users/felix/OneDrive/Documents/anga/Projects/Mern/smart-farm-iot-backend/agent_api_spec.yaml)
+2.  **In AI Studio**:
+    *   Click **Tools** -> **Add OpenAPI Tool**.
+    *   Upload/Paste the contents of the YAML file.
+3.  **Authentication Control**:
+    *   The API requires a header-based key.
+    *   **Header Name**: `x-agent-key`
+    *   **Value**: *[Contact Felix for your specific key]*
+
+---
+
+## 🧠 Step 2: Agent "Brain" Configuration
+To make Gemini an effective farmer, use these **System Instructions**:
+
+> "You are an expert **Reasoning Farm Assistant**. Use the `listDevices` tool to identify nodes and `getDeviceTelemetry` for live checks. For decision-making, use [queryInsights](file:///c:/Users/felix/OneDrive/Documents/anga/Projects/Mern/smart-farm-iot-backend/src/services/agentService.js#64-104) to check 24-hour averages. 
+> 
+> **Irrigation Protocol:** If `soil_moisture` < 25% and `light_intensity` > 60%, use `sendCommand` with `ACTIVATE_PUMP`. Always warn the user about temperature spikes (>40°C)."
+
+---
+
+## 📟 Step 3: Developer Test Cases
+Use these prompts in Gemini to verify the integration:
+
+1.  **Observation Test**: *"Show me all the farm nodes currently registered in Malawi."*
+2.  **Telemetry Test**: *"Is it currently sunny at farm-node-01?"*
+    *   *Agent Logic*: Agent calls `getDeviceTelemetry` -> reads `light_intensity`.
+3.  **Analytics Test**: *"Has the soil been drying out over the last 24 hours?"*
+    *   *Agent Logic*: Agent calls [queryInsights](file:///c:/Users/felix/OneDrive/Documents/anga/Projects/Mern/smart-farm-iot-backend/src/services/agentService.js#64-104) -> checks if `avg_moisture` is decreasing.
+4.  **Control Test**: *"The humidity is very low, turn on the mist pump for 10 minutes."*
+    *   *Agent Logic*: Agent calls `sendCommand`.
+
+---
+
+## 📡 Live Telemetry Feed (Sample JSON)
+When the agent calls the API, it will receive data structured like this:
+```json
+{
+  "profile": { "device_id": "farm-node-01", "location": "Blantyre" },
+  "latest_telemetry": {
+    "temperature": 24,
+    "humidity": 66,
+    "soil_moisture": 77,
+    "light_intensity": 85,
+    "latitude": -15.7861,
+    "longitude": 35.0058,
+    "soil_status": "Wet"
+  }
+}
+```
+
+**Developer Contact**: Felix (Project Owner) 🚜🛰️

@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: Smart Farm IoT Agent API
+  version: 1.0.0
+  description: API for AI Agents to monitor farm telemetry from ESP32 nodes and control irrigation hardware.
+servers:
+  - url: https://smart-farm-iot-backend-m3bhxcln9-felixkumafutsas-projects.vercel.app/api/agent
+    description: Production Cloud Backend (Vercel)
+paths:
+  /devices:
+    get:
+      summary: List all active farm nodes
+      operationId: listDevices
+      description: Returns a list of all registered IoT devices with their locations.
+      responses:
+        '200':
+          description: A list of device objects.
+  /devices/{device_id}:
+    get:
+      summary: Get latest telemetry for a specific node
+      operationId: getDeviceTelemetry
+      description: Fetches the most recent temperature, humidity, light, and soil moisture reading for a node.
+      parameters:
+        - name: device_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "farm-node-01"
+      responses:
+        '200':
+          description: JSON object containing profile and latest_telemetry.
+  /query:
+    post:
+      summary: Get AI insights and statistical summaries
+      operationId: queryInsights
+      description: Analyze 24h trends (averages) or identify threshold breaks (anomalies).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [device_id, query_type]
+              properties:
+                device_id:
+                  type: string
+                  example: "farm-node-01"
+                query_type:
+                  type: string
+                  enum: [averages, anomalies]
+                  description: "Use 'averages' for health trends and 'anomalies' for critical alerts."
+      responses:
+        '200':
+          description: Summarized data results.
+  /commands:
+    post:
+      summary: Dispatch instructions to hardware
+      operationId: sendCommand
+      description: Queue a command for the ESP32 to execute (e.g., toggling a pump).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [device_id, command]
+              properties:
+                device_id:
+                  type: string
+                  example: "farm-node-01"
+                command:
+                  type: string
+                  example: "ACTIVATE_PUMP"
+                payload:
+                  type: object
+                  example: { "duration": 15, "reason": "Low soil moisture detected" }
+      responses:
+        '200':
+          description: Command successfully queued in the backend.
+components:
+  securitySchemes:
+    agentKeyAuth:
+      type: apiKey
+      in: header
+      name: x-agent-key
+      description: |
+        Required API key for agent authentication.
+        
+        For Google AI Studio:
+        1. Run: node scripts/createGoogleAIAgent.js to get your API key
+        2. In Google AI Studio, add custom header:
+           - Header Name: x-agent-key
+           - Header Value: [your-generated-api-key]
+        
+        Example header: x-agent-key: agent_1234567890abcdef
+security:
+  - agentKeyAuth: []

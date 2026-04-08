@@ -10,8 +10,14 @@ const authRoutes = require('./routes/authRoutes');
 const deviceRoutes = require('./routes/deviceRoutes');
 const iotRoutes = require('./routes/iotRoutes');
 const agentRoutes = require('./routes/agentRoutes');
+const agentManagementRoutes = require('./routes/agentManagementRoutes');
 
 const app = express();
+
+/**
+ * Trust proxy for Vercel deployment (fixes rate-limiting issues)
+ */
+app.set('trust proxy', 1);
 
 /**
  * Middleware setup.
@@ -36,6 +42,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/devices', deviceRoutes);
 app.use('/api/iot', iotRoutes);
 app.use('/api/agent', agentRoutes);
+app.use('/api/agent-management', agentManagementRoutes);
 
 /**
  * Handle undefined routes.
