@@ -8,6 +8,8 @@ exports.sendData = async (req, res, next) => {
     try {
         const { device_id, temperature, humidity, soil_moisture, light_intensity, latitude, longitude } = req.body;
 
+        console.log('Telemetry data received:', req.body);
+
         const reading = await iotService.saveReading({
             device_id,
             temperature,
