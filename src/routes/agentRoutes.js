@@ -7,32 +7,101 @@ const { verifyAgentKey, checkPermission } = require('../middleware/agentAuth');
 router.use(verifyAgentKey);
 
 /**
- * @route GET /api/agent/devices
- * @desc Get all registered devices
+ * @swagger
+ * /api/agent/devices:
+ *   get:
+ *     summary: Get all registered devices (AI Agent context)
+ *     tags: [Agent]
+ *     security:
+ *       - agentKeyAuth: []
+ *     responses:
+ *       200:
+ *         description: List of devices
  */
 router.get('/devices', checkPermission('read_telemetry'), agentController.getAllDevices);
 
 /**
- * @route GET /api/agent/devices/:device_id
- * @desc Get device profile and latest telemetry
+ * @swagger
+ * /api/agent/devices/{device_id}:
+ *   get:
+ *     summary: Get device details and latest telemetry
+ *     tags: [Agent]
+ *     security:
+ *       - agentKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Device details
  */
 router.get('/devices/:device_id', checkPermission('read_telemetry'), agentController.getDeviceDetail);
 
 /**
- * @route GET /api/agent/devices/:device_id/data
- * @desc Get historical sensor data with pagination
+ * @swagger
+ * /api/agent/devices/{device_id}/data:
+ *   get:
+ *     summary: Get historical sensor data with pagination
+ *     tags: [Agent]
+ *     security:
+ *       - agentKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Historical telemetry
  */
 router.get('/devices/:device_id/data', checkPermission('read_telemetry'), agentController.getHistory);
 
 /**
- * @route POST /api/agent/query
- * @desc Run AI insights (averages, anomalies)
+ * @swagger
+ * /api/agent/query:
+ *   post:
+ *     summary: Run AI insights (averages, anomalies)
+ *     tags: [Agent]
+ *     security:
+ *       - agentKeyAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [query]
+ *             properties:
+ *               query: { type: string, example: "What is the average humidity today?" }
+ *     responses:
+ *       200:
+ *         description: AI Query result
  */
 router.post('/query', checkPermission('read_telemetry'), agentController.postQuery);
 
 /**
- * @route POST /api/agent/commands
- * @desc Send commands to devices
+ * @swagger
+ * /api/agent/commands:
+ *   post:
+ *     summary: Send command to a device
+ *     tags: [Agent]
+ *     security:
+ *       - agentKeyAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [device_id, command]
+ *             properties:
+ *               device_id: { type: string }
+ *               command: { type: string, example: "ACTIVATE_PUMP" }
+ *     responses:
+ *       200:
+ *         description: Command dispatched
  */
 router.post('/commands', checkPermission('send_commands'), agentController.postCommand);
 

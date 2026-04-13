@@ -11,10 +11,8 @@ const apiLimiter = rateLimit({
   standardHeaders: true, // Return rate limit info in headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   message: { error: 'Too many requests. Please try again later.' },
-  // Use the X-Forwarded-For header for IP detection in Vercel
-  keyGenerator: (req) => {
-    return req.ip || req.connection.remoteAddress || 'unknown';
-  }
+  // Default keyGenerator uses req.ip, which is correctly populated 
+  // by Express since 'trust proxy' is set in app.js.
 });
 
 module.exports = {
