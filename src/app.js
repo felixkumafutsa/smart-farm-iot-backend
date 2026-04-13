@@ -27,6 +27,14 @@ app.set('trust proxy', 1);
 app.use(cors()); // CORS support
 app.use(helmet({
     crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "script-src": ["'self'", "'unsafe-inline'", "unpkg.com"],
+            "style-src": ["'self'", "'unsafe-inline'", "unpkg.com"],
+            "img-src": ["'self'", "data:", "unpkg.com"],
+        },
+    },
 })); // Security headers
 app.use(morgan('dev')); // Logging
 app.use(express.json()); // JSON body parsing
