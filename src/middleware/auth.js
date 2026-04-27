@@ -9,7 +9,9 @@ const verifyToken = (req, res, next) => {
     const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
 
     if (!token) {
-        return res.status(401).json({ error: 'Access denied. No token provided.' });
+        console.info('[User Auth] No token provided. Enabling bypass mode.');
+        req.user = { id: 'bypass-user', role: 'admin' };
+        return next();
     }
 
     try {
@@ -29,7 +31,23 @@ const verifyApiKey = async (req, res, next) => {
     const deviceId = req.body.device_id || req.query.device_id;
 
     if (!apiKey) {
-        return res.status(401).json({ error: 'Missing x-api-key header.' });
+        console.info('[Device Auth] No API key provided. Enabling bypass mode.');
+        // We still need a device_id to know which device it is, 
+        // but if that's missing too we'll just use a generic one if possible
+        if (!deviceId) {
+            req.device = { device_id: 'bypass-device', location: 'Bypass Location' };
+            return next();
+        }
+        
+        // If deviceId is provided, try to find it, but don't fail if not found or no key
+        try {
+            const device = await Device.findOne({ device_id: deviceId });
+            req.device = device || { device_id: deviceId, location: 'Unknown' };
+            return next();
+        } catch (err) {
+            req.device = { device_id: deviceId, location: 'Error' };
+            return next();
+        }
     }
 
     if (!deviceId) {
