@@ -24,7 +24,28 @@ app.set('trust proxy', 1);
 /**
  * Middleware setup.
  */
-app.use(cors()); // CORS support
+const corsOptions = {
+    origin: function(origin, callback) {
+        const allowedOrigins = [
+            'http://localhost:5173', // Dev frontend
+            process.env.FRONTEND_URL  // Production frontend
+        ].filter(Boolean);
+        
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            // Log for debugging
+            console.warn(`CORS blocked origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions)); // CORS support
 app.use(helmet({
     crossOriginResourcePolicy: false,
     contentSecurityPolicy: {
