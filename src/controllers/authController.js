@@ -12,6 +12,11 @@ exports.login = async (req, res, next) => {
         // Simple auth for demo - in reality, check DB.
         const adminUser = process.env.ADMIN_USER || 'admin';
         const adminPass = process.env.ADMIN_PASS || 'password123';
+        const jwtSecret = process.env.JWT_SECRET || 'default_secret_change_me';
+
+        if (!process.env.JWT_SECRET) {
+            console.warn('[Auth] WARNING: JWT_SECRET not set in environment variables!');
+        }
 
         if (username !== adminUser || password !== adminPass) {
             throw new AppError('Incorrect username or password', 401);
@@ -19,7 +24,7 @@ exports.login = async (req, res, next) => {
 
         const token = jwt.sign(
             { id: 'admin', role: 'ai-agent' },
-            process.env.JWT_SECRET,
+            jwtSecret,
             { expiresIn: '30d' }
         );
 

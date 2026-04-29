@@ -28,22 +28,26 @@ const corsOptions = {
     origin: function(origin, callback) {
         const allowedOrigins = [
             'http://localhost:5173', // Dev frontend
+            'http://localhost:3000',  // Alternative dev
             process.env.FRONTEND_URL  // Production frontend
         ].filter(Boolean);
         
-        // Allow requests with no origin (like mobile apps or curl)
+        // Log for debugging (remove in production if too verbose)
+        console.log(`[CORS] Origin: ${origin}, Allowed: ${allowedOrigins.join(', ')}`);
+        
+        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            // Log for debugging
-            console.warn(`CORS blocked origin: ${origin}`);
+            console.warn(`[CORS] Blocked origin: ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    maxAge: 3600 // Cache preflight requests for 1 hour
 };
 app.use(cors(corsOptions)); // CORS support
 app.use(helmet({
