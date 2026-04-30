@@ -28,10 +28,12 @@ const schemas = {
 
     sendSensorData: Joi.object({
         device_id: Joi.string().required(),
+        api_key: Joi.string().optional(),
         temperature: Joi.number().required(),
         humidity: Joi.number().required(),
-        soil_moisture: Joi.number().min(0).max(100).required(),
-        light_intensity: Joi.number().min(0).max(100).optional(),
+        soil_moisture: Joi.number().min(0).max(100).optional(),
+        water_level: Joi.number().optional(),
+        light_intensity: Joi.number().optional(),
         latitude: Joi.number().min(-90).max(90).optional(),
         longitude: Joi.number().min(-180).max(180).optional()
     })

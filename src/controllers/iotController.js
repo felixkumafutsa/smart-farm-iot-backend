@@ -6,7 +6,7 @@ const { AppError } = require('../middleware/error');
  */
 exports.sendData = async (req, res, next) => {
     try {
-        const { device_id, temperature, humidity, soil_moisture, light_intensity, latitude, longitude } = req.body;
+        const { device_id, temperature, humidity, soil_moisture, light_intensity, water_level, latitude, longitude } = req.body;
 
         console.log('Telemetry data received:', req.body);
 
@@ -16,6 +16,7 @@ exports.sendData = async (req, res, next) => {
             humidity,
             soil_moisture,
             light_intensity,
+            water_level,
             latitude,
             longitude
         });

@@ -19,14 +19,18 @@ const sensorReadingSchema = new mongoose.Schema({
     },
     soil_moisture: {
         type: Number,
-        required: true,
+        required: false,
         min: 0,
         max: 100
     },
     soil_status: {
         type: String,
         enum: ['Dry', 'Moderate', 'Wet', 'Unknown'],
-        required: true
+        required: false
+    },
+    water_level: {
+        type: Number,
+        required: false
     },
     latitude: {
         type: Number,

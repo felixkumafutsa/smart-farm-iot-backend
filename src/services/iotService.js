@@ -17,8 +17,8 @@ const interpretSoilMoisture = (moisture) => {
  * Save new sensor reading to MongoDB.
  */
 const saveReading = async (data) => {
-    const { device_id, temperature, humidity, soil_moisture } = data;
-    const soil_status = interpretSoilMoisture(soil_moisture);
+    const { device_id, temperature, humidity, soil_moisture, water_level } = data;
+    const soil_status = soil_moisture !== undefined ? interpretSoilMoisture(soil_moisture) : undefined;
 
     const reading = new SensorReading({
         device_id,
@@ -26,6 +26,7 @@ const saveReading = async (data) => {
         humidity,
         soil_moisture,
         soil_status,
+        water_level,
         latitude: data.latitude,
         longitude: data.longitude,
         light_intensity: data.light_intensity
