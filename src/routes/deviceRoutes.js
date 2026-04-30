@@ -53,4 +53,47 @@ router.post('/register', validate(schemas.registerDevice), deviceController.regi
  */
 router.get('/', verifyToken, deviceController.list);
 
+/**
+ * @swagger
+ * /api/devices/{device_id}:
+ *   patch:
+ *     summary: Update a device
+ *     tags: [Devices]
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema: { type: string }
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               location: { type: string }
+ *               latitude: { type: number }
+ *               longitude: { type: number }
+ *     responses:
+ *       200:
+ *         description: Updated
+ */
+router.patch('/:device_id', verifyToken, deviceController.update);
+
+/**
+ * @swagger
+ * /api/devices/{device_id}:
+ *   delete:
+ *     summary: Remove a device
+ *     tags: [Devices]
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Removed
+ */
+router.delete('/:device_id', verifyToken, deviceController.remove);
+
 module.exports = router;

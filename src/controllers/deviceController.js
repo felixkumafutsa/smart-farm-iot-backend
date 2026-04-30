@@ -61,3 +61,48 @@ exports.list = async (req, res, next) => {
         next(error);
     }
 };
+
+/**
+ * Update device details.
+ */
+exports.update = async (req, res, next) => {
+    try {
+        const { device_id } = req.params;
+        const { location, latitude, longitude } = req.body;
+
+        const updatedDevice = await deviceService.updateDevice(device_id, {
+            location,
+            latitude,
+            longitude
+        });
+
+        if (!updatedDevice) throw new AppError('Device not found', 404);
+
+        res.status(200).json({
+            success: true,
+            message: 'Device updated successfully',
+            device: updatedDevice
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * Remove a device.
+ */
+exports.remove = async (req, res, next) => {
+    try {
+        const { device_id } = req.params;
+        const deletedDevice = await deviceService.deleteDevice(device_id);
+
+        if (!deletedDevice) throw new AppError('Device not found', 404);
+
+        res.status(200).json({
+            success: true,
+            message: 'Device removed successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
+};

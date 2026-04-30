@@ -29,7 +29,27 @@ const getAllDevices = async () => {
     return await Device.find({}, 'device_id location latitude longitude createdAt');
 };
 
+/**
+ * Update a device's information.
+ */
+const updateDevice = async (deviceId, updateData) => {
+    return await Device.findOneAndUpdate(
+        { device_id: deviceId },
+        { $set: updateData },
+        { new: true, runValidators: true }
+    );
+};
+
+/**
+ * Delete a device.
+ */
+const deleteDevice = async (deviceId) => {
+    return await Device.findOneAndDelete({ device_id: deviceId });
+};
+
 module.exports = {
     registerDevice,
-    getAllDevices
+    getAllDevices,
+    updateDevice,
+    deleteDevice
 };
