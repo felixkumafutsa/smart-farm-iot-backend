@@ -33,16 +33,29 @@ exports.register = async (req, res, next) => {
     }
 };
 
+const iotService = require('../services/iotService');
+
 /**
  * List all devices.
  */
 exports.list = async (req, res, next) => {
     try {
         const devices = await deviceService.getAllDevices();
+        
+        // Augment with real-time online status
+        const augmentedDevices = await Promise.all(devices.map(async (device) => {
+            const status = await iotService.getDeviceStatus(device.device_id);
+            return {
+                ...device.toObject(),
+                online: status.online,
+                last_seen: status.last_seen
+            };
+        }));
+
         res.status(200).json({
             success: true,
-            count: devices.length,
-            devices
+            count: augmentedDevices.length,
+            devices: augmentedDevices
         });
     } catch (error) {
         next(error);
